@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DialogAddPet</class>
+ <widget class="QDialog" name="DialogAddPet">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>520</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Cadastro de Pet</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+
+   <item>
+    <widget class="QLabel" name="fotoPreview">
+     <property name="text">
+      <string>Nenhuma imagem selecionada</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 1px dashed gray; padding: 8px; min-height: 150px; max-height: 150px;</string>
+     </property>
+    </widget>
+   </item>
+
+   <item>
+    <widget class="QPushButton" name="selecionarFotoButton">
+     <property name="text">
+      <string>Selecionar Foto</string>
+     </property>
+    </widget>
+   </item>
+
+   <item>
+    <widget class="QLabel" name="tituloLabel">
+     <property name="text">
+      <string><b>Cadastro de Pet</b></string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font-size: 18px; padding: 10px;</string>
+     </property>
+    </widget>
+   </item>
+
+   <item>
+    <widget class="QLineEdit" name="nomePetInput">
+     <property name="placeholderText">
+      <string>Nome do Pet</string>
+     </property>
+    </widget>
+   </item>
+
+   <item>
+    <widget class="QLineEdit" name="idadePetInput">
+     <property name="placeholderText">
+      <string>Idade (anos)</string>
+     </property>
+    </widget>
+   </item>
+
+   <item>
+    <widget class="QComboBox" name="especiePetInput">
+     <item>
+      <property name="text"><string>Cachorro</string></property>
+     </item>
+     <item>
+      <property name="text"><string>Gato</string></property>
+     </item>
+    </widget>
+   </item>
+
+   <item>
+    <widget class="QComboBox" name="racaPetInput"/>
+   </item>
+
+   <item>
+    <widget class="QComboBox" name="sexoPetInput">
+     <item>
+      <property name="text"><string>Macho</string></property>
+     </item>
+     <item>
+      <property name="text"><string>Fêmea</string></property>
+     </item>
+    </widget>
+   </item>
+
+   <item>
+    <layout class="QHBoxLayout" name="botoesLayout">
+     <item>
+      <widget class="QPushButton" name="confirmarButton">
+       <property name="text">
+        <string>Confirmar</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="cancelarButton">
+       <property name="text">
+        <string>Cancelar</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+
+  </layout>
+  <property name="styleSheet">
+   <string notr="true">
+    QDialog {
+        background-color: #f5f5f5;
+        border-radius: 10px;
+    }
+
+    QLineEdit, QComboBox {
+        background-color: white;
+        color: black;
+        padding: 5px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    QComboBox QAbstractItemView {
+        background-color: white;
+        color: black;
+        selection-background-color: #483AA0;
+        selection-color: white;
+        border: 1px solid #483AA0;
+        outline: 0;
+        padding: 5px;
+    }
+
+    QComboBox QAbstractItemView::item {
+        padding: 5px 10px;
+        min-height: 24px;
+    }
+
+    QComboBox QAbstractItemView::item:hover {
+        background-color: #6C63FF;
+        color: white;
+    }
+
+    QPushButton {
+        padding: 6px;
+        border-radius: 6px;
+        background-color: #483AA0;
+        color: white;
+    }
+
+    QPushButton:hover {
+        background-color: #0E2148;
+    }
+
+   </string>
+  </property>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

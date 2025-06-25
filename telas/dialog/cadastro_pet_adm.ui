@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DialogCadastroPet</class>
+ <widget class="QDialog" name="DialogCadastroPet">
+  <property name="windowTitle">
+   <string>Cadastro de Pet</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <!-- Wrapper para o QFormLayout -->
+    <widget class="QWidget" name="formWidget">
+     <layout class="QFormLayout" name="formLayout">
+     
+      <item row="0" column="0">
+       <widget class="QLabel" name="labelNome">
+        <property name="text">
+         <string>Nome:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="lineEditNome"/>
+      </item>
+
+      <item row="1" column="0">
+       <widget class="QLabel" name="labelIdade">
+        <property name="text">
+         <string>Idade:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="lineEditIdade"/>
+      </item>
+
+      <item row="2" column="0">
+       <widget class="QLabel" name="labelRaca">
+        <property name="text">
+         <string>Raça:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="lineEditRaca"/>
+      </item>
+
+      <item row="3" column="0">
+       <widget class="QLabel" name="labelSexo">
+        <property name="text">
+         <string>Sexo:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QComboBox" name="comboBoxSexo">
+        <item>
+         <property name="text">
+          <string>Macho</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Fêmea</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+
+      <item row="4" column="0">
+       <widget class="QLabel" name="labelFoto">
+        <property name="text">
+         <string>Foto:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLineEdit" name="lineEditFoto"/>
+      </item>
+
+      <!-- Botão Selecionar Foto na linha seguinte -->
+      <item row="5" column="1">
+       <widget class="QPushButton" name="btnSelecionarFoto">
+        <property name="text">
+         <string>Selecionar Foto</string>
+        </property>
+       </widget>
+      </item>
+
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="btnConfirmar">
+     <property name="text">
+      <string>Confirmar</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

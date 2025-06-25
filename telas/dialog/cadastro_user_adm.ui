@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DialogCadastroUsuario</class>
+ <widget class="QDialog" name="DialogCadastroUsuario">
+  <property name="windowTitle">
+   <string>Cadastrar Usuário</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+
+   <!-- Container widget para o QFormLayout -->
+   <item>
+    <widget class="QWidget" name="formContainer">
+     <layout class="QFormLayout" name="formLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="labelNome">
+        <property name="text"><string>Nome:</string></property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="lineEditNome"/>
+      </item>
+
+      <item row="1" column="0">
+       <widget class="QLabel" name="labelSobrenome">
+        <property name="text"><string>Sobrenome:</string></property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="lineEditSobrenome"/>
+      </item>
+
+      <item row="2" column="0">
+       <widget class="QLabel" name="labelTelefone">
+        <property name="text"><string>Telefone:</string></property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="lineEditTelefone"/>
+      </item>
+
+      <item row="3" column="0">
+       <widget class="QLabel" name="labelEmail">
+        <property name="text"><string>Email:</string></property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="lineEditEmail"/>
+      </item>
+
+      <item row="4" column="0">
+       <widget class="QLabel" name="labelGenero">
+        <property name="text"><string>Gênero:</string></property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QComboBox" name="comboBoxGenero">
+        <item><property name="text"><string>Masculino</string></property></item>
+        <item><property name="text"><string>Feminino</string></property></item>
+        <item><property name="text"><string>Outros</string></property></item>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+
+   <item>
+    <widget class="QPushButton" name="btnConfirmar">
+     <property name="text"><string>Confirmar</string></property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

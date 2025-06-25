@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DialogTrocaSenha</class>
+ <widget class="QDialog" name="DialogTrocaSenha">
+  <property name="windowTitle">
+   <string>Nova Senha</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Digite sua nova senha:</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="lineEditNovaSenha">
+     <property name="echoMode">
+      <enum>QLineEdit.Password</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="btnConfirmar">
+     <property name="text">
+      <string>Confirmar</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

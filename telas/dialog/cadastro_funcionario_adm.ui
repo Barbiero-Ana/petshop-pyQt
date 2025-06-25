@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DialogCadastroFuncionario</class>
+ <widget class="QDialog" name="DialogCadastroFuncionario">
+  <property name="windowTitle">
+   <string>Cadastrar Funcionário</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QFormLayout" name="formLayout">
+
+     <item row="0" column="0">
+      <widget class="QLabel" name="labelNomeCompleto">
+       <property name="text">
+        <string>Nome Completo:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="lineEditNomeCompleto"/>
+     </item>
+
+     <item row="1" column="0">
+      <widget class="QLabel" name="labelIdade">
+       <property name="text">
+        <string>Idade:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QSpinBox" name="spinBoxIdade">
+       <property name="minimum">
+        <number>18</number>
+       </property>
+       <property name="maximum">
+        <number>100</number>
+       </property>
+       <property name="value">
+        <number>25</number>
+       </property>
+      </widget>
+     </item>
+
+     <item row="2" column="0">
+      <widget class="QLabel" name="labelGenero">
+       <property name="text">
+        <string>Gênero:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QComboBox" name="comboBoxGenero">
+       <item>
+        <property name="text">
+         <string>Masculino</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Feminino</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Outros</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+
+     <item row="3" column="0">
+      <widget class="QLabel" name="labelEmail">
+       <property name="text">
+        <string>Email:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="lineEditEmail"/>
+     </item>
+
+     <!-- Novo campo: Telefone -->
+     <item row="4" column="0">
+      <widget class="QLabel" name="labelTelefone">
+       <property name="text">
+        <string>Telefone:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLineEdit" name="lineEditTelefone"/>
+     </item>
+
+     <item row="5" column="0">
+      <widget class="QLabel" name="labelEspecialidade">
+       <property name="text">
+        <string>Especialidade:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QLineEdit" name="lineEditEspecialidade"/>
+     </item>
+
+     <!-- Checkbox ocupando duas colunas -->
+     <item row="6" column="0" colspan="2">
+      <widget class="QCheckBox" name="checkBoxVeterinario">
+       <property name="text">
+        <string>Veterinário</string>
+       </property>
+      </widget>
+     </item>
+
+     <!-- Campos CRVET -->
+     <item row="7" column="0">
+      <widget class="QLabel" name="labelCRVET">
+       <property name="text">
+        <string>CRVET:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QLineEdit" name="lineEditCRVET"/>
+     </item>
+
+     <!-- Label para campo obrigatório CRVET -->
+     <item row="8" column="1">
+      <widget class="QLabel" name="labelCRVETObrigatorio">
+       <property name="text">
+        <string><font color="red">* Campo obrigatório</font></string>
+       </property>
+       <property name="visible">
+        <bool>false</bool>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+      </widget>
+     </item>
+
+    </layout>
+   </item>
+
+   <!-- Botão Confirmar -->
+   <item>
+    <widget class="QPushButton" name="btnConfirmar">
+     <property name="text">
+      <string>Confirmar</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
