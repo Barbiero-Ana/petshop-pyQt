@@ -14,63 +14,171 @@
    <string>Administrador</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-
-   <!-- Barra lateral -->
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
-     <rect><x>20</x><y>130</y><width>160</width><height>391</height></rect>
+     <rect>
+      <x>20</x>
+      <y>130</y>
+      <width>160</width>
+      <height>391</height>
+     </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
-     <item><widget class="QPushButton" name="agendabutton"><property name="text"><string>Agenda</string></property></widget></item>
-     <item><widget class="QPushButton" name="profissionalbutton"><property name="text"><string>Profissionais</string></property></widget></item>
-     <item><widget class="QPushButton" name="localizacaobutton"><property name="text"><string>Usuários</string></property></widget></item>
-     <item><widget class="QPushButton" name="eventosbutton"><property name="text"><string>Eventos</string></property></widget></item>
-     <item><widget class="QPushButton" name="pushButton_5"><property name="text"><string>Configurações</string></property></widget></item>
-     <item><widget class="QPushButton" name="pushButton"><property name="text"><string>Consultas</string></property></widget></item>
-     <item><widget class="QPushButton" name="pushButton_4"><property name="text"><string>Sair</string></property></widget></item>
+     <item>
+      <widget class="QPushButton" name="agendabutton">
+       <property name="text">
+        <string>Agenda</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="profissionalbutton">
+       <property name="text">
+        <string>Profissionais</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="localizacaobutton">
+       <property name="text">
+        <string>Usuários</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_5">
+       <property name="text">
+        <string>Configurações</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton">
+       <property name="text">
+        <string>Consultas</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_4">
+       <property name="text">
+        <string>Sair</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
-
-   <!-- Logo -->
    <widget class="QLabel" name="label">
-    <property name="geometry"><rect><x>10</x><y>0</y><width>171</width><height>151</height></rect></property>
-    <property name="pixmap"><pixmap>../../../../../Downloads/Logo simples circular esmaltaria preto.png</pixmap></property>
-    <property name="scaledContents"><bool>true</bool></property>
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>171</width>
+      <height>151</height>
+     </rect>
+    </property>
+    <property name="pixmap">
+     <pixmap>../../../../../Downloads/Logo simples circular esmaltaria preto.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
    </widget>
-
-   <!-- Título -->
    <widget class="QLabel" name="label_2">
-    <property name="geometry"><rect><x>190</x><y>20</y><width>341</width><height>101</height></rect></property>
-    <property name="font"><font><pointsize>31</pointsize></font></property>
-    <property name="text"><string>Perfil de Administrador Local</string></property>
-    <property name="wordWrap"><bool>true</bool></property>
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>20</y>
+      <width>341</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>31</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Perfil de Administrador Local</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
    </widget>
-
-   <!-- Subtítulo -->
    <widget class="QLabel" name="label_6">
-    <property name="geometry"><rect><x>190</x><y>130</y><width>300</width><height>30</height></rect></property>
-    <property name="font"><font><pointsize>14</pointsize></font></property>
-    <property name="text"><string>Pets cadastrados no sistema</string></property>
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>130</y>
+      <width>300</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Pets cadastrados no sistema</string>
+    </property>
    </widget>
-
-   <!-- Campo de busca -->
    <widget class="QLineEdit" name="campoBusca">
-    <property name="geometry"><rect><x>190</x><y>170</y><width>300</width><height>30</height></rect></property>
-    <property name="placeholderText"><string>Buscar por nome ou dono...</string></property>
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>170</y>
+      <width>300</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="placeholderText">
+     <string>Buscar por nome ou dono...</string>
+    </property>
    </widget>
-
-   <!-- Botão de busca -->
    <widget class="QPushButton" name="btnBuscar">
-    <property name="geometry"><rect><x>500</x><y>170</y><width>80</width><height>30</height></rect></property>
-    <property name="text"><string>Buscar</string></property>
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>170</y>
+      <width>80</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Buscar</string>
+    </property>
    </widget>
-
-   <!-- Área dos cards de pets -->
    <widget class="QWidget" name="gridLayoutWidget">
-    <property name="geometry"><rect><x>190</x><y>210</y><width>561</width><height>361</height></rect></property>
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>210</y>
+      <width>561</width>
+      <height>361</height>
+     </rect>
+    </property>
     <layout class="QGridLayout" name="gridLayout"/>
    </widget>
-
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>171</width>
+      <height>151</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>../../../../Downloads/Logo simples circular esmaltaria preto (1).png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

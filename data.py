@@ -3,6 +3,7 @@ import hashlib
 
 DB_PATH = 'petshop.db'
 
+# ---------- Criação das Tabelas ----------
 def criar_tabela_usuarios():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -58,6 +59,26 @@ def criar_tabela_pets():
     conn.commit()
     conn.close()
 
+def criar_tabela_consultas():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS consultas (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        pet_id INTEGER NOT NULL,
+        dono_email TEXT NOT NULL,
+        veterinario_id INTEGER NOT NULL,
+        data_consulta TEXT NOT NULL,
+        hora_consulta TEXT NOT NULL,
+        FOREIGN KEY (pet_id) REFERENCES pets(id),
+        FOREIGN KEY (dono_email) REFERENCES usuarios(email),
+        FOREIGN KEY (veterinario_id) REFERENCES funcionarios(id)
+    )
+    ''')
+    conn.commit()
+    conn.close()
+
+# ---------- Inserções ----------
 def inserir_usuario(primeiro_nome, sobrenome, telefone, genero, email, senha_hash, is_admin=0, tipo_usuario='paciente', senha_temporaria=0):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -67,28 +88,6 @@ def inserir_usuario(primeiro_nome, sobrenome, telefone, genero, email, senha_has
     ''', (primeiro_nome, sobrenome, telefone, genero, email, senha_hash, is_admin, tipo_usuario, senha_temporaria))
     conn.commit()
     conn.close()
-
-def buscar_usuario_por_email(email):
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM usuarios WHERE email = ?", (email,))
-    user = cursor.fetchone()
-    conn.close()
-    return user
-
-def criar_usuario_admin_padrao():
-    email_admin = "admin@petshop.com"
-    senha_admin = "admin123"
-    senha_hash = hashlib.sha256(senha_admin.encode()).hexdigest()
-
-    if not buscar_usuario_por_email(email_admin):
-        inserir_usuario(
-            "Admin", "Master", "00000000000", "Outro",
-            email_admin, senha_hash, is_admin=1, tipo_usuario='admin', senha_temporaria=0
-        )
-        print("Usuário administrador criado com sucesso.")
-    else:
-        print("Usuário administrador já existe.")
 
 def inserir_funcionario(nome_completo, idade, genero, email, especialidade, crvet):
     conn = sqlite3.connect(DB_PATH)
@@ -110,6 +109,41 @@ def inserir_pet(usuario_email, nome, idade, raca, sexo, foto):
     conn.commit()
     conn.close()
 
+def inserir_consulta(pet_id, dono_email, veterinario_id, data_consulta, hora_consulta):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute('''
+    INSERT INTO consultas (pet_id, dono_email, veterinario_id, data_consulta, hora_consulta)
+    VALUES (?, ?, ?, ?, ?)
+    ''', (pet_id, dono_email, veterinario_id, data_consulta, hora_consulta))
+    conn.commit()
+    conn.close()
+
+# ---------- Buscas ----------
+def buscar_usuario_por_email(email):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM usuarios WHERE email = ?", (email,))
+    user = cursor.fetchone()
+    conn.close()
+    return user
+
+def buscar_nome_usuario(email):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT primeiro_nome FROM usuarios WHERE email = ?", (email,))
+    resultado = cursor.fetchone()
+    conn.close()
+    return resultado[0] if resultado else None
+
+def buscar_todos_usuarios():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, primeiro_nome, sobrenome, email FROM usuarios")
+    usuarios = cursor.fetchall()
+    conn.close()
+    return usuarios
+
 def buscar_pets_usuario(usuario_email):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -118,20 +152,30 @@ def buscar_pets_usuario(usuario_email):
     conn.close()
     return pets
 
-def buscar_nome_usuario(email):
+def buscar_todos_pets_com_id():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute("SELECT primeiro_nome FROM usuarios WHERE email = ?", (email,))
-    resultado = cursor.fetchone()
+    cursor.execute("SELECT id, nome, raca FROM pets")
+    pets = cursor.fetchall()
     conn.close()
-    if resultado:
-        return resultado[0]
-    return None
+    return pets
+
+def buscar_usuarios_email_nome(termo_busca):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    termo_busca = f"%{termo_busca.lower()}%"
+    cursor.execute("""
+        SELECT email, primeiro_nome || ' ' || sobrenome AS nome_completo
+        FROM usuarios
+        WHERE LOWER(primeiro_nome) LIKE ? OR LOWER(sobrenome) LIKE ? OR LOWER(email) LIKE ?
+    """, (termo_busca, termo_busca, termo_busca))
+    resultados = cursor.fetchall()
+    conn.close()
+    return resultados
 
 def buscar_pets_com_dono(termo_busca=""):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-
     if termo_busca:
         termo_busca = f"%{termo_busca.lower()}%"
         cursor.execute('''
@@ -146,34 +190,40 @@ def buscar_pets_com_dono(termo_busca=""):
             FROM pets
             INNER JOIN usuarios ON pets.usuario_email = usuarios.email
         ''')
-
     resultado = cursor.fetchall()
     conn.close()
     return resultado
 
-def buscar_usuarios_email_nome(termo_busca):
+def buscar_funcionarios_veterinarios():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
+    cursor.execute('''
+    SELECT id, nome_completo, idade, genero, email, crvet
+    FROM funcionarios
+    WHERE crvet IS NOT NULL AND crvet != ''
+    ''')
+    vets = cursor.fetchall()
+    conn.close()
+    return vets
 
-    termo_busca = f"%{termo_busca.lower()}%"
-    cursor.execute("""
-        SELECT email, primeiro_nome || ' ' || sobrenome AS nome_completo
-        FROM usuarios
-        WHERE LOWER(primeiro_nome) LIKE ? OR LOWER(sobrenome) LIKE ? OR LOWER(email) LIKE ?
-    """, (termo_busca, termo_busca, termo_busca))
-
+def buscar_consultas():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute('''
+    SELECT consultas.id, pets.nome, pets.raca, usuarios.primeiro_nome, usuarios.email, usuarios.telefone,
+           funcionarios.nome_completo, funcionarios.idade, funcionarios.genero, funcionarios.crvet,
+           consultas.data_consulta, consultas.hora_consulta
+    FROM consultas
+    JOIN pets ON consultas.pet_id = pets.id
+    JOIN usuarios ON consultas.dono_email = usuarios.email
+    JOIN funcionarios ON consultas.veterinario_id = funcionarios.id
+    ORDER BY consultas.data_consulta, consultas.hora_consulta
+    ''')
     resultados = cursor.fetchall()
     conn.close()
-    return resultados  # lista de tuplas (email, nome_completo)
+    return resultados
 
-def verificar_usuario(email):
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute("SELECT email, senha_temporaria FROM usuarios WHERE email = ?", (email,))
-    resultado = cursor.fetchone()
-    conn.close()
-    return resultado  # retorna (email, senha_temporaria) ou None
-
+# ---------- Atualizações ----------
 def atualizar_senha_temporaria(email, nova_senha_hash):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -185,10 +235,56 @@ def atualizar_senha_temporaria(email, nova_senha_hash):
     conn.commit()
     conn.close()
 
+# ---------- Verificações ----------
+def verificar_usuario(email):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT email, senha_temporaria FROM usuarios WHERE email = ?", (email,))
+    resultado = cursor.fetchone()
+    conn.close()
+    return resultado
 
+# ---------- Exclusões ----------
+def excluir_usuario_por_id(usuario_id):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM usuarios WHERE id = ?", (usuario_id,))
+    conn.commit()
+    conn.close()
+
+def excluir_pet_por_id(pet_id):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM pets WHERE id = ?", (pet_id,))
+    conn.commit()
+    conn.close()
+
+def excluir_consulta_por_id(consulta_id):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM consultas WHERE id = ?", (consulta_id,))
+    conn.commit()
+    conn.close()
+
+# ---------- Inicialização ----------
+def criar_usuario_admin_padrao():
+    email_admin = "admin@petshop.com"
+    senha_admin = "admin123"
+    senha_hash = hashlib.sha256(senha_admin.encode()).hexdigest()
+
+    if not buscar_usuario_por_email(email_admin):
+        inserir_usuario(
+            "Admin", "Master", "00000000000", "Outro",
+            email_admin, senha_hash, is_admin=1, tipo_usuario='admin', senha_temporaria=0
+        )
+        print("Usuário administrador criado com sucesso.")
+    else:
+        print("Usuário administrador já existe.")
 
 if __name__ == "__main__":
     criar_tabela_usuarios()
     criar_tabela_funcionarios()
     criar_tabela_pets()
+    criar_tabela_consultas()
     criar_usuario_admin_padrao()
+    print("Banco de dados inicializado com sucesso.")

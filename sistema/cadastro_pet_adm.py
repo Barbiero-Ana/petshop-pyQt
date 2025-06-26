@@ -28,10 +28,10 @@ class DialogCadastroPet(QDialog):
         self.especiePetInput.currentIndexChanged.connect(self.atualizar_racas)
         self.atualizar_racas()
 
-        # Drag & Drop
         self.fotoPreview.setAcceptDrops(True)
         self.fotoPreview.installEventFilter(self)
 
+        self.listWidgetUsuarios.hide()  # ⛔️ Oculta lista inicialmente
         self.toggle_dono_input()
 
     def toggle_dono_input(self):
@@ -41,20 +41,29 @@ class DialogCadastroPet(QDialog):
         if not ativo:
             self.lineEditDono.clear()
             self.listWidgetUsuarios.clear()
+            self.listWidgetUsuarios.hide()  # Oculta ao marcar 'sem dono'
 
     def atualizar_lista_usuarios(self):
         termo = self.lineEditDono.text().strip()
         self.listWidgetUsuarios.clear()
+
         if termo:
             resultados = buscar_usuarios_email_nome(termo)
-            for email, nome in resultados:
-                item = QListWidgetItem(f"{nome} <{email}>")
-                item.setData(Qt.ItemDataRole.UserRole, email)
-                self.listWidgetUsuarios.addItem(item)
+            if resultados:
+                for email, nome in resultados:
+                    item = QListWidgetItem(f"{nome} <{email}>")
+                    item.setData(Qt.ItemDataRole.UserRole, email)
+                    self.listWidgetUsuarios.addItem(item)
+                self.listWidgetUsuarios.show()  # Mostra se houver sugestões
+            else:
+                self.listWidgetUsuarios.hide()
+        else:
+            self.listWidgetUsuarios.hide()
 
     def selecionar_usuario_lista(self, item):
         email = item.data(Qt.ItemDataRole.UserRole)
         self.lineEditDono.setText(email)
+        self.listWidgetUsuarios.hide()
 
     def eventFilter(self, obj, event):
         if obj == self.fotoPreview:
@@ -71,7 +80,9 @@ class DialogCadastroPet(QDialog):
         return super().eventFilter(obj, event)
 
     def selecionar_foto(self):
-        caminho, _ = QFileDialog.getOpenFileName(self, "Selecionar Foto", filter="Imagens (*.png *.jpg *.jpeg *.bmp *.gif)")
+        caminho, _ = QFileDialog.getOpenFileName(
+            self, "Selecionar Foto", filter="Imagens (*.png *.jpg *.jpeg *.bmp *.gif)"
+        )
         if caminho:
             self.set_foto(caminho)
 

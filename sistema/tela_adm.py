@@ -13,6 +13,7 @@ from data import (
 
 from emails import gerar_senha_aleatoria, enviar_email_senha
 from sistema.petcard_adm import PetCardAdm
+from sistema.eventos_agenda import TelaEventosAgenda
 
 
 class DialogCadastroUsuario(QDialog):
@@ -39,7 +40,6 @@ class DialogCadastroFuncionario(QDialog):
         self.checkBoxVeterinario.stateChanged.connect(self.toggle_crvet)
         self.btnConfirmar.clicked.connect(self.accept)
 
-
     def toggle_crvet(self, state):
         mostrar = state == QtCore.Qt.CheckState.Checked
         for widget in [self.labelCRVET, self.lineEditCRVET]:
@@ -48,8 +48,6 @@ class DialogCadastroFuncionario(QDialog):
             else:
                 widget.hide()
         self.adjustSize()
-
-
 
 
 class TelaInicioAdm(QMainWindow):
@@ -97,19 +95,25 @@ class TelaInicioAdm(QMainWindow):
 
     def abrir_dialog_escolha_cadastro(self):
         msg = QMessageBox(self)
-        msg.setWindowTitle("Cadastrar")
-        msg.setText("O que deseja cadastrar?")
-        botao_usuario = msg.addButton("Usuário", QMessageBox.ButtonRole.AcceptRole)
-        botao_pet = msg.addButton("Pet", QMessageBox.ButtonRole.AcceptRole)
+        msg.setWindowTitle("Gerenciar")
+        msg.setText("O que deseja fazer?")
+        botao_cadastrar_usuario = msg.addButton("Cadastrar Usuário", QMessageBox.ButtonRole.ActionRole)
+        botao_cadastrar_pet = msg.addButton("Cadastrar Pet", QMessageBox.ButtonRole.ActionRole)
+        botao_excluir_usuario = msg.addButton("Excluir Usuário", QMessageBox.ButtonRole.ActionRole)
+        botao_excluir_pet = msg.addButton("Excluir Pet", QMessageBox.ButtonRole.ActionRole)
         msg.addButton(QMessageBox.StandardButton.Cancel)
 
         msg.exec()
 
-        botao_clicado = msg.clickedButton()
-        if botao_clicado == botao_usuario:
+        botao = msg.clickedButton()
+        if botao == botao_cadastrar_usuario:
             self.abrir_dialog_cadastro_usuario()
-        elif botao_clicado == botao_pet:
+        elif botao == botao_cadastrar_pet:
             self.abrir_dialog_cadastro_pet()
+        elif botao == botao_excluir_usuario:
+            self.excluir_usuario()
+        elif botao == botao_excluir_pet:
+            self.excluir_pet()
 
     def abrir_dialog_cadastro_usuario(self):
         dialog = DialogCadastroUsuario()
@@ -165,7 +169,6 @@ class TelaInicioAdm(QMainWindow):
             else:
                 dialog.labelCRVETObrigatorio.setVisible(False)
 
-
             if buscar_usuario_por_email(email):
                 QMessageBox.warning(self, "Erro", "Já existe um usuário cadastrado com este email.")
                 return
@@ -191,9 +194,73 @@ class TelaInicioAdm(QMainWindow):
         print("Abrir tela de Configurações")
 
     def abrir_consultas(self):
-        print("Abrir tela de Consultas")
+        # Abrir a janela de agenda/eventos
+        self.tela_agenda = TelaEventosAgenda(self)
+        self.tela_agenda.show()
 
     def sair(self):
         if self.login_window:
             self.login_window.show()
         self.close()
+
+    def excluir_usuario(self):
+        from data import buscar_todos_usuarios, excluir_usuario_por_id
+
+        usuarios = buscar_todos_usuarios()
+        if not usuarios:
+            QMessageBox.information(self, "Aviso", "Nenhum usuário cadastrado.")
+            return
+
+        lista_exibicao = [f"{usuario_id} - {primeiro} {sobrenome} ({email})" 
+                          for usuario_id, primeiro, sobrenome, email in usuarios]
+
+        item_selecionado, ok = QtWidgets.QInputDialog.getItem(
+            self, "Excluir Usuário", "Selecione o usuário para excluir:",
+            lista_exibicao, 0, False
+        )
+
+        if ok and item_selecionado:
+            usuario_id = int(item_selecionado.split(" - ")[0])
+            confirm = QMessageBox.question(
+                self, "Confirmar Exclusão",
+                f"Deseja realmente excluir o usuário de ID {usuario_id}?",
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+            )
+
+            if confirm == QMessageBox.StandardButton.Yes:
+                try:
+                    excluir_usuario_por_id(usuario_id)
+                    QMessageBox.information(self, "Sucesso", "Usuário excluído com sucesso.")
+                except Exception as e:
+                    QMessageBox.critical(self, "Erro", f"Erro ao excluir usuário: {e}")
+
+    def excluir_pet(self):
+        from data import buscar_todos_pets_com_id, excluir_pet_por_id
+
+        pets = buscar_todos_pets_com_id()
+        if not pets:
+            QMessageBox.information(self, "Aviso", "Nenhum pet cadastrado.")
+            return
+
+        lista_exibicao = [f"{pet_id} - {nome} ({raca})" for pet_id, nome, raca in pets]
+
+        item_selecionado, ok = QtWidgets.QInputDialog.getItem(
+            self, "Excluir Pet", "Selecione o pet para excluir:",
+            lista_exibicao, 0, False
+        )
+
+        if ok and item_selecionado:
+            pet_id = int(item_selecionado.split(" - ")[0])
+            confirm = QMessageBox.question(
+                self, "Confirmar Exclusão",
+                f"Deseja realmente excluir o pet de ID {pet_id}?",
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+            )
+
+            if confirm == QMessageBox.StandardButton.Yes:
+                try:
+                    excluir_pet_por_id(pet_id)
+                    QMessageBox.information(self, "Sucesso", "Pet excluído com sucesso.")
+                    self.carregar_pets()
+                except Exception as e:
+                    QMessageBox.critical(self, "Erro", f"Erro ao excluir pet: {e}")
