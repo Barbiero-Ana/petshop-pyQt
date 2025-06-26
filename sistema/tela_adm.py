@@ -42,22 +42,28 @@ class DialogCadastroFuncionario(QDialog):
         self.lineEditCRVET.textChanged.connect(self.validar_crvet)
 
     def toggle_crvet(self, state):
-        is_checked = state == QtCore.Qt.CheckState.Checked
-        if is_checked:
+        print(f"Toggle state: {state}")
+        if state == 2:  # QtCore.Qt.CheckState.Checked é 2
             self.lineEditCRVET.setEnabled(True)
             self.lineEditCRVET.setReadOnly(False)
             self.lineEditCRVET.setFocus()
+            print(f"CRVET enabled={self.lineEditCRVET.isEnabled()}, readonly={self.lineEditCRVET.isReadOnly()}")
         else:
             self.lineEditCRVET.setEnabled(False)
             self.lineEditCRVET.setReadOnly(True)
             self.lineEditCRVET.clear()
             self.labelCRVETObrigatorio.setVisible(False)
             self.set_lineedit_border(self.lineEditCRVET, valid=True)
+            print(f"CRVET disabled={self.lineEditCRVET.isEnabled()}, readonly={self.lineEditCRVET.isReadOnly()}")
+
+
+
+
 
     def validar_crvet(self, texto):
         if not self.lineEditCRVET.isEnabled():
             return
-        padrao = r'^[A-Za-z0-9]{5,}$'  # CRVET: mínimo 5 caracteres alfanuméricos
+        padrao = r'^[A-Za-z0-9]{5,}$'  
         if re.fullmatch(padrao, texto):
             self.labelCRVETObrigatorio.setVisible(False)
             self.set_lineedit_border(self.lineEditCRVET, valid=True)

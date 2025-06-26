@@ -1,55 +1,32 @@
-import sys
-from PyQt6.QtWidgets import QApplication, QDialog, QCheckBox, QLineEdit, QLabel, QVBoxLayout
+from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QLineEdit, QVBoxLayout
 from PyQt6.QtCore import Qt
-import re
+import sys
 
-class TestDialog(QDialog):
+class TestWidget(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Teste CRVET")
-
-        self.checkbox = QCheckBox("Veterinário", self)
-        self.lineEditCRVET = QLineEdit(self)
-        self.labelObrigatorio = QLabel("* Campo obrigatório", self)
-        self.labelObrigatorio.setStyleSheet("color: red")
-        self.labelObrigatorio.setVisible(False)
-
-        # Começa em readOnly = True para bloquear digitação, mas ENABLED para poder focar
-        self.lineEditCRVET.setReadOnly(True)
+        self.checkbox = QCheckBox("Veterinário")
+        self.lineedit = QLineEdit()
+        self.lineedit.setEnabled(False)
+        self.lineedit.setReadOnly(True)
 
         layout = QVBoxLayout(self)
         layout.addWidget(self.checkbox)
-        layout.addWidget(self.lineEditCRVET)
-        layout.addWidget(self.labelObrigatorio)
+        layout.addWidget(self.lineedit)
 
-        self.checkbox.stateChanged.connect(self.toggle_crvet)
-        self.lineEditCRVET.textChanged.connect(self.validar_crvet)
+        self.checkbox.stateChanged.connect(self.toggle_lineedit)
 
-    def toggle_crvet(self, state):
-        is_checked = state == Qt.CheckState.Checked
-        # Aqui só alterna readOnly, NÃO desabilita o campo (nunca usar setEnabled False!)
-        self.lineEditCRVET.setReadOnly(not is_checked)
-        if not is_checked:
-            self.lineEditCRVET.clear()
-            self.labelObrigatorio.setVisible(False)
-            self.lineEditCRVET.setStyleSheet("")
-
-    def validar_crvet(self, text):
-        # Só valida se o campo estiver editável
-        if self.lineEditCRVET.isReadOnly():
-            return
-
-        padrao = r'^[A-Za-z0-9]{5,}$'
-        if re.fullmatch(padrao, text):
-            self.labelObrigatorio.setVisible(False)
-            self.lineEditCRVET.setStyleSheet("border: 1px solid green;")
+    def toggle_lineedit(self, state):
+        if state == Qt.Checked:
+            self.lineedit.setEnabled(True)
+            self.lineedit.setReadOnly(False)
+            self.lineedit.setFocus()
         else:
-            self.labelObrigatorio.setVisible(True)
-            self.lineEditCRVET.setStyleSheet("border: 1px solid red;")
+            self.lineedit.setEnabled(False)
+            self.lineedit.setReadOnly(True)
+            self.lineedit.clear()
 
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    dlg = TestDialog()
-    dlg.show()
-    sys.exit(app.exec())
+app = QApplication(sys.argv)
+w = TestWidget()
+w.show()
+sys.exit(app.exec())
