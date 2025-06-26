@@ -1,14 +1,13 @@
 from PyQt6.QtWidgets import (
     QDialog, QFileDialog, QMessageBox,
-    QWidget, QLabel, QHBoxLayout, QListView, QVBoxLayout
+    QWidget, QLabel, QVBoxLayout, QListView
 )
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtCore import Qt
 from PyQt6 import uic
-from data import inserir_pet
+from data import inserir_pet, buscar_pets_usuario
 import os
 import requests
-
 
 class DialogAddPet(QDialog):
     def __init__(self, email_usuario):
@@ -37,7 +36,6 @@ class DialogAddPet(QDialog):
                 border-radius: 6px;
             }
         """)
-
 
         # Permitir drag & drop na label de foto
         self.fotoPreview.setAcceptDrops(True)
@@ -193,54 +191,51 @@ class DialogAddPet(QDialog):
         msg.exec()
         self.accept()
 
-
-class PetCard(QWidget):
-    def __init__(self, nome, idade, raca, foto_path):
-        super().__init__()
-
-        layout = QHBoxLayout()
-        self.setLayout(layout)
-
-        label_foto = QLabel()
-        if foto_path and os.path.exists(foto_path):
-            pixmap = QPixmap(foto_path)
-            if not pixmap.isNull():
-                pixmap = pixmap.scaled(100, 100, aspectRatioMode=Qt.AspectRatioMode.KeepAspectRatio)
-                label_foto.setPixmap(pixmap)
-            else:
-                label_foto.setText("Imagem inválida")
-        else:
-            label_foto.setText("Sem foto")
-
-        label_info = QLabel(f"🐾 Nome: {nome}\n📅 Idade: {idade}\n🐶 Raça: {raca}")
-
-        layout.addWidget(label_foto)
-        layout.addWidget(label_info)
-
-
-
-
 class PetCard(QWidget):
     def __init__(self, nome, idade, raca, foto):
         super().__init__()
 
         layout = QVBoxLayout()
+        layout.setContentsMargins(15, 15, 15, 15)
+        layout.setSpacing(12)
         self.setLayout(layout)
 
-        self.label_nome = QLabel(f"Nome: {nome}")
-        self.label_idade = QLabel(f"Idade: {idade}")
-        self.label_raca = QLabel(f"Raça: {raca}")
+        self.label_foto = QLabel()
+        if foto and os.path.exists(foto):
+            pixmap = QPixmap(foto)
+            if not pixmap.isNull():
+                pixmap = pixmap.scaled(140, 140, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+                self.label_foto.setPixmap(pixmap)
+            else:
+                self.label_foto.setText("Imagem inválida")
+        else:
+            self.label_foto.setText("Sem foto")
+
+        self.label_foto.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(self.label_foto)
+
+        self.label_nome = QLabel(nome)
+        self.label_nome.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.label_nome.setStyleSheet("font-weight: bold; font-size: 16pt; color: #483AA0;")
         layout.addWidget(self.label_nome)
+
+        self.label_idade = QLabel(f"Idade: {idade}")
+        self.label_idade.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.label_idade.setStyleSheet("font-size: 13pt;")
         layout.addWidget(self.label_idade)
+
+        self.label_raca = QLabel(f"Raça: {raca}")
+        self.label_raca.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.label_raca.setStyleSheet("font-size: 13pt;")
         layout.addWidget(self.label_raca)
 
-        # Se tiver caminho da foto e a foto existir, exibe a imagem
-        if foto:
-            try:
-                pixmap = QPixmap(foto)
-                if not pixmap.isNull():
-                    self.label_foto = QLabel()
-                    self.label_foto.setPixmap(pixmap.scaledToWidth(100))
-                    layout.addWidget(self.label_foto)
-            except Exception as e:
-                print("Erro ao carregar foto do pet:", e)
+        self.setStyleSheet("""
+            QWidget {
+                border: 2px solid #483AA0;
+                border-radius: 15px;
+                background-color: #f0f0ff;
+                max-width: 180px;
+                min-width: 160px;
+                min-height: 260px;
+            }
+        """)

@@ -1,9 +1,8 @@
-from PyQt6.QtWidgets import (
-    QMainWindow, QLabel, QScrollArea, QWidget, QHBoxLayout
-)
+from PyQt6.QtWidgets import QMainWindow, QLabel, QPushButton, QMessageBox
 from PyQt6 import uic
 from data import buscar_pets_usuario, criar_tabela_pets, buscar_nome_usuario
-from sistema.cadastro_pet import DialogAddPet, PetCard  # Vamos usar seu PetCard real
+from sistema.cadastro_pet import DialogAddPet
+from sistema.listar_pets import DialogListaPets
 
 class TelaInicio(QMainWindow):
     def __init__(self, email_usuario):
@@ -13,53 +12,56 @@ class TelaInicio(QMainWindow):
         self.email_usuario = email_usuario
         criar_tabela_pets()
 
-        # Saudações personalizadas
+        # Saudação personalizada
         nome_completo = buscar_nome_usuario(self.email_usuario)
-        primeiro_nome = nome_completo.split()[0]
+        primeiro_nome = nome_completo.split()[0] if nome_completo else "Usuário"
         self.welcomeLabel.setText(f"Seja bem-vindo(a), {primeiro_nome}!")
 
-        # Botão de adicionar pet
+        # Botões
         self.addpets.clicked.connect(self.abrir_dialog_add_pet)
-
-        # Botão de sair
         self.pushButton_4.clicked.connect(self.fechar_sessao)
+        self.pushButton.clicked.connect(self.abrir_dialog_lista_pets)
 
-        # Scroll area e widget de conteúdo
-        self.scrollArea = self.findChild(QScrollArea, 'scrollArea')
-        self.scroll_content = self.scrollArea.findChild(QWidget, 'scrollAreaWidgetContents')
-        self.widget_conteudo = self.scroll_content.findChild(QWidget, 'widget')
-
-        # Cria e associa um layout horizontal explicitamente no widget_conteudo
-        self.pets_layout = QHBoxLayout()
-        self.widget_conteudo.setLayout(self.pets_layout)
+        # Layout para colocar botões dos pets (exemplo usando gridLayout do .ui)
+        self.pets_layout = self.findChild(type(self.gridLayout), 'gridLayout')
 
         self.carregar_pets()
 
     def carregar_pets(self):
-        # Limpa o layout
-        while self.pets_layout.count():
-            item = self.pets_layout.takeAt(0)
+        layout = self.pets_layout
+        if layout is None:
+            print("Erro: gridLayout não encontrado na UI")
+            return
+
+        while layout.count():
+            item = layout.takeAt(0)
             if item.widget():
                 item.widget().deleteLater()
 
         pets = buscar_pets_usuario(self.email_usuario)
         if not pets:
             label = QLabel("Nenhum pet cadastrado ainda.")
-            self.pets_layout.addWidget(label)
+            layout.addWidget(label, 0, 0)
         else:
-            for pet in pets:
+            for index, pet in enumerate(pets):
                 id_pet, nome, idade, raca, foto = pet
-                pet_card = PetCard(nome, idade, raca, foto)
-                self.pets_layout.addWidget(pet_card)
+                btn = QPushButton(nome)
+                btn.clicked.connect(lambda checked, p=pet: self.mostrar_info_pet(p))
+                layout.addWidget(btn, index // 3, index % 3)
 
-        self.widget_conteudo.adjustSize()
-        self.scrollArea.widget().adjustSize()
-        self.scrollArea.update()
+    def mostrar_info_pet(self, pet):
+        id_pet, nome, idade, raca, foto = pet
+        texto = f"Nome: {nome}\nIdade: {idade}\nRaça: {raca}"
+        QMessageBox.information(self, "Informações do Pet", texto)
 
     def abrir_dialog_add_pet(self):
         dialog = DialogAddPet(self.email_usuario)
         if dialog.exec():
             self.carregar_pets()
+
+    def abrir_dialog_lista_pets(self):
+        dialog = DialogListaPets(self.email_usuario)
+        dialog.exec()
 
     def fechar_sessao(self):
         from sistema.login import TelaLogin  # Evita import circular

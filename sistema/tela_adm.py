@@ -62,7 +62,7 @@ class TelaInicioAdm(QMainWindow):
         self.agendabutton.clicked.connect(self.abrir_agenda)
         self.profissionalbutton.clicked.connect(self.abrir_dialog_cadastro_funcionario)
         self.localizacaobutton.clicked.connect(self.abrir_dialog_escolha_cadastro)
-        self.eventosbutton.clicked.connect(self.abrir_eventos)
+        # self.eventosbutton.clicked.connect(self.abrir_eventos)  # REMOVIDO
         self.pushButton_5.clicked.connect(self.abrir_configuracoes)
         self.pushButton.clicked.connect(self.abrir_consultas)
         self.pushButton_4.clicked.connect(self.sair)
