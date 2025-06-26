@@ -1,8 +1,9 @@
-from PyQt6.QtWidgets import QMainWindow, QLabel, QPushButton, QMessageBox
+from PyQt6.QtWidgets import QMainWindow, QLabel, QPushButton
 from PyQt6 import uic
 from data import buscar_pets_usuario, criar_tabela_pets, buscar_nome_usuario
 from sistema.cadastro_pet import DialogAddPet
-from sistema.listar_pets import DialogListaPets
+from sistema.listar_pets import DialogListaPets, DialogInfoPet 
+from sistema.eventos_agenda import TelaEventosAgenda
 
 class TelaInicio(QMainWindow):
     def __init__(self, email_usuario):
@@ -12,7 +13,6 @@ class TelaInicio(QMainWindow):
         self.email_usuario = email_usuario
         criar_tabela_pets()
 
-        # Saudação personalizada
         nome_completo = buscar_nome_usuario(self.email_usuario)
         primeiro_nome = nome_completo.split()[0] if nome_completo else "Usuário"
         self.welcomeLabel.setText(f"Seja bem-vindo(a), {primeiro_nome}!")
@@ -21,11 +21,16 @@ class TelaInicio(QMainWindow):
         self.addpets.clicked.connect(self.abrir_dialog_add_pet)
         self.pushButton_4.clicked.connect(self.fechar_sessao)
         self.pushButton.clicked.connect(self.abrir_dialog_lista_pets)
+        self.pushbutton.clicked.connect(self.abrir_consultas)
 
-        # Layout para colocar botões dos pets (exemplo usando gridLayout do .ui)
         self.pets_layout = self.findChild(type(self.gridLayout), 'gridLayout')
 
         self.carregar_pets()
+
+    def abrir_consultas(self):
+        # Abrir a janela de agenda/eventos
+        self.tela_agenda = TelaEventosAgenda(self)
+        self.tela_agenda.show()
 
     def carregar_pets(self):
         layout = self.pets_layout
@@ -50,9 +55,8 @@ class TelaInicio(QMainWindow):
                 layout.addWidget(btn, index // 3, index % 3)
 
     def mostrar_info_pet(self, pet):
-        id_pet, nome, idade, raca, foto = pet
-        texto = f"Nome: {nome}\nIdade: {idade}\nRaça: {raca}"
-        QMessageBox.information(self, "Informações do Pet", texto)
+        dialog = DialogInfoPet(pet, self)
+        dialog.exec()
 
     def abrir_dialog_add_pet(self):
         dialog = DialogAddPet(self.email_usuario)

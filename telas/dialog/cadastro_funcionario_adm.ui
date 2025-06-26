@@ -79,7 +79,6 @@
       <widget class="QLineEdit" name="lineEditEmail"/>
      </item>
 
-     <!-- Novo campo: Telefone -->
      <item row="4" column="0">
       <widget class="QLabel" name="labelTelefone">
        <property name="text">
@@ -102,7 +101,6 @@
       <widget class="QLineEdit" name="lineEditEspecialidade"/>
      </item>
 
-     <!-- Checkbox ocupando duas colunas -->
      <item row="6" column="0" colspan="2">
       <widget class="QCheckBox" name="checkBoxVeterinario">
        <property name="text">
@@ -111,7 +109,6 @@
       </widget>
      </item>
 
-     <!-- Campos CRVET -->
      <item row="7" column="0">
       <widget class="QLabel" name="labelCRVET">
        <property name="text">
@@ -120,10 +117,13 @@
       </widget>
      </item>
      <item row="7" column="1">
-      <widget class="QLineEdit" name="lineEditCRVET"/>
+      <widget class="QLineEdit" name="lineEditCRVET">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+      </widget>
      </item>
 
-     <!-- Label para campo obrigatório CRVET -->
      <item row="8" column="1">
       <widget class="QLabel" name="labelCRVETObrigatorio">
        <property name="text">
@@ -143,7 +143,6 @@
     </layout>
    </item>
 
-   <!-- Botão Confirmar -->
    <item>
     <widget class="QPushButton" name="btnConfirmar">
      <property name="text">

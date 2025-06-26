@@ -1,16 +1,14 @@
-from PyQt6 import QtCore, QtWidgets
+from PyQt6 import QtCore, QtWidgets, uic
 from PyQt6.QtWidgets import QMainWindow, QDialog, QMessageBox
-from PyQt6 import uic
 import hashlib
+import re
 from sistema.cadastro_pet_adm import DialogCadastroPet
-
 from data import (
     buscar_pets_com_dono,
     inserir_usuario,
     inserir_funcionario,
     buscar_usuario_por_email
 )
-
 from emails import gerar_senha_aleatoria, enviar_email_senha
 from sistema.petcard_adm import PetCardAdm
 from sistema.eventos_agenda import TelaEventosAgenda
@@ -30,24 +28,48 @@ class DialogCadastroFuncionario(QDialog):
         uic.loadUi('telas/dialog/cadastro_funcionario_adm.ui', self)
         self.lineEditTelefone.setInputMask('(00)00000-0000;_')
 
-        # Esconder campos CRVET inicialmente com hide()
-        for widget in [self.labelCRVET, self.lineEditCRVET]:
-            widget.hide()
+        self.labelCRVET.setVisible(True)
+        self.lineEditCRVET.setVisible(True)
 
-        self.labelCRVETObrigatorio.setVisible(False)  # Esconde label de aviso inicialmente
+        # Começa desabilitado e readonly
+        self.lineEditCRVET.setEnabled(False)
+        self.lineEditCRVET.setReadOnly(True)
 
-        # Conectar checkbox para mostrar/esconder campo CRVET
+        self.labelCRVETObrigatorio.setVisible(False)
+
+        # Conecta checkbox para habilitar/desabilitar CRVET
         self.checkBoxVeterinario.stateChanged.connect(self.toggle_crvet)
-        self.btnConfirmar.clicked.connect(self.accept)
+        self.lineEditCRVET.textChanged.connect(self.validar_crvet)
 
     def toggle_crvet(self, state):
-        mostrar = state == QtCore.Qt.CheckState.Checked
-        for widget in [self.labelCRVET, self.lineEditCRVET]:
-            if mostrar:
-                widget.show()
-            else:
-                widget.hide()
-        self.adjustSize()
+        is_checked = state == QtCore.Qt.CheckState.Checked
+        if is_checked:
+            self.lineEditCRVET.setEnabled(True)
+            self.lineEditCRVET.setReadOnly(False)
+            self.lineEditCRVET.setFocus()
+        else:
+            self.lineEditCRVET.setEnabled(False)
+            self.lineEditCRVET.setReadOnly(True)
+            self.lineEditCRVET.clear()
+            self.labelCRVETObrigatorio.setVisible(False)
+            self.set_lineedit_border(self.lineEditCRVET, valid=True)
+
+    def validar_crvet(self, texto):
+        if not self.lineEditCRVET.isEnabled():
+            return
+        padrao = r'^[A-Za-z0-9]{5,}$'  # CRVET: mínimo 5 caracteres alfanuméricos
+        if re.fullmatch(padrao, texto):
+            self.labelCRVETObrigatorio.setVisible(False)
+            self.set_lineedit_border(self.lineEditCRVET, valid=True)
+        else:
+            self.labelCRVETObrigatorio.setVisible(True)
+            self.set_lineedit_border(self.lineEditCRVET, valid=False)
+
+    def set_lineedit_border(self, lineedit, valid=True):
+        if valid:
+            lineedit.setStyleSheet("border: 1px solid green;")
+        else:
+            lineedit.setStyleSheet("border: 1px solid red;")
 
 
 class TelaInicioAdm(QMainWindow):
@@ -58,18 +80,14 @@ class TelaInicioAdm(QMainWindow):
         self.setWindowTitle("Painel do Administrador")
         self.login_window = login_window
 
-        # Botões do menu lateral
         self.agendabutton.clicked.connect(self.abrir_agenda)
         self.profissionalbutton.clicked.connect(self.abrir_dialog_cadastro_funcionario)
         self.localizacaobutton.clicked.connect(self.abrir_dialog_escolha_cadastro)
-        # self.eventosbutton.clicked.connect(self.abrir_eventos)  # REMOVIDO
         self.pushButton_5.clicked.connect(self.abrir_configuracoes)
         self.pushButton.clicked.connect(self.abrir_consultas)
         self.pushButton_4.clicked.connect(self.sair)
 
-        # Botão de busca
         self.btnBuscar.clicked.connect(self.buscar_pets)
-        # Carregar pets inicialmente
         self.carregar_pets()
 
     def carregar_pets(self, filtro=None):
@@ -161,20 +179,32 @@ class TelaInicioAdm(QMainWindow):
                 QMessageBox.warning(self, "Erro", "Nome completo e email são obrigatórios.")
                 return
 
-            if is_veterinario and not crvet:
-                print("CRVET vazio e veterinário marcado: mostrando label de aviso")
-                dialog.labelCRVETObrigatorio.setVisible(True)
-                dialog.lineEditCRVET.setFocus()
-                return
-            else:
+            if is_veterinario:
+                if not crvet:
+                    dialog.labelCRVETObrigatorio.setVisible(True)
+                    dialog.lineEditCRVET.setFocus()
+                    return
+                if not re.fullmatch(r'[A-Za-z0-9]{5,}', crvet):
+                    QMessageBox.warning(
+                        self,
+                        "Erro",
+                        "CRMVET inválido. Deve conter ao menos 5 caracteres alfanuméricos."
+                    )
+                    dialog.lineEditCRVET.setFocus()
+                    return
                 dialog.labelCRVETObrigatorio.setVisible(False)
+            else:
+                crvet = ""
 
             if buscar_usuario_por_email(email):
                 QMessageBox.warning(self, "Erro", "Já existe um usuário cadastrado com este email.")
                 return
 
             try:
-                inserir_funcionario(nome_completo, idade, genero, email, especialidade, crvet)
+                inserir_funcionario(
+                    nome_completo, idade, genero, email, telefone,
+                    especialidade, is_veterinario, crvet
+                )
                 QMessageBox.information(self, "Sucesso", f"Funcionário cadastrado: {nome_completo}")
             except Exception as e:
                 QMessageBox.critical(self, "Erro", f"Erro ao cadastrar funcionário: {e}")
@@ -194,7 +224,6 @@ class TelaInicioAdm(QMainWindow):
         print("Abrir tela de Configurações")
 
     def abrir_consultas(self):
-        # Abrir a janela de agenda/eventos
         self.tela_agenda = TelaEventosAgenda(self)
         self.tela_agenda.show()
 
@@ -211,7 +240,7 @@ class TelaInicioAdm(QMainWindow):
             QMessageBox.information(self, "Aviso", "Nenhum usuário cadastrado.")
             return
 
-        lista_exibicao = [f"{usuario_id} - {primeiro} {sobrenome} ({email})" 
+        lista_exibicao = [f"{usuario_id} - {primeiro} {sobrenome} ({email})"
                           for usuario_id, primeiro, sobrenome, email in usuarios]
 
         item_selecionado, ok = QtWidgets.QInputDialog.getItem(

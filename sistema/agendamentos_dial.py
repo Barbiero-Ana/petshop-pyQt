@@ -22,7 +22,11 @@ class DialogAgendarConsulta(QDialog):
         self.comboDono.addItems(self.usuarios_dict.keys())
 
         # Veterinários
-        self.vets_dict = {f"{nome} (CRMV: {crvet})": vid for vid, nome, _, _, _, crvet in buscar_funcionarios_veterinarios()}
+        self.vets_dict = {
+            f"{nome} - {especialidade} (CRMV: {crvet})": vid
+            for vid, nome, _, _, _, crvet, especialidade in buscar_funcionarios_veterinarios(completo=True)
+        }
+
         self.comboVeterinario.addItems(self.vets_dict.keys())
 
         # Setar data/hora padrão

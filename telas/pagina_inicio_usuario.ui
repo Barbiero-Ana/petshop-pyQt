@@ -25,6 +25,45 @@
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
+      <spacer name="verticalSpacer_6">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_7">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_8">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
       <widget class="QPushButton" name="consultasbutton">
        <property name="text">
         <string>Consultas</string>
@@ -87,7 +126,7 @@
      <item>
       <widget class="QPushButton" name="eventosbutton">
        <property name="text">
-        <string>Eventos</string>
+        <string>Agenda</string>
        </property>
       </widget>
      </item>
@@ -235,7 +274,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>-10</y>
+      <y>0</y>
       <width>181</width>
       <height>161</height>
      </rect>

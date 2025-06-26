@@ -34,7 +34,9 @@ def criar_tabela_funcionarios():
         idade INTEGER NOT NULL,
         genero TEXT NOT NULL,
         email TEXT UNIQUE NOT NULL,
+        telefone TEXT,
         especialidade TEXT NOT NULL,
+        is_veterinario INTEGER NOT NULL DEFAULT 0,
         crvet TEXT
     )
     ''')
@@ -89,13 +91,18 @@ def inserir_usuario(primeiro_nome, sobrenome, telefone, genero, email, senha_has
     conn.commit()
     conn.close()
 
-def inserir_funcionario(nome_completo, idade, genero, email, especialidade, crvet):
+def inserir_funcionario(nome_completo, idade, genero, email, telefone, especialidade, is_veterinario, crvet=None):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute('''
-    INSERT INTO funcionarios (nome_completo, idade, genero, email, especialidade, crvet)
-    VALUES (?, ?, ?, ?, ?, ?)
-    ''', (nome_completo, idade, genero, email, especialidade, crvet))
+    INSERT INTO funcionarios (
+        nome_completo, idade, genero, email, telefone, especialidade, is_veterinario, crvet
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (
+        nome_completo, idade, genero, email, telefone, especialidade,
+        1 if is_veterinario else 0,
+        crvet if is_veterinario else None
+    ))
     conn.commit()
     conn.close()
 
@@ -194,24 +201,34 @@ def buscar_pets_com_dono(termo_busca=""):
     conn.close()
     return resultado
 
-def buscar_funcionarios_veterinarios():
+def buscar_funcionarios_veterinarios(completo=False):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute('''
-    SELECT id, nome_completo, idade, genero, email, crvet
-    FROM funcionarios
-    WHERE crvet IS NOT NULL AND crvet != ''
-    ''')
-    vets = cursor.fetchall()
+    if completo:
+        cursor.execute('''
+        SELECT id, nome_completo, idade, genero, email, crvet, especialidade
+        FROM funcionarios
+        WHERE crvet IS NOT NULL AND crvet != ''
+        ''')
+    else:
+        cursor.execute('''
+        SELECT id, nome_completo, idade, genero, email, crvet
+        FROM funcionarios
+        WHERE crvet IS NOT NULL AND crvet != ''
+        ''')
+    resultados = cursor.fetchall()
     conn.close()
-    return vets
+    return resultados
+
 
 def buscar_consultas():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute('''
-    SELECT consultas.id, pets.nome, pets.raca, usuarios.primeiro_nome, usuarios.email, usuarios.telefone,
-           funcionarios.nome_completo, funcionarios.idade, funcionarios.genero, funcionarios.crvet,
+    SELECT consultas.id, pets.nome, pets.raca,
+           usuarios.primeiro_nome, usuarios.email, usuarios.telefone,
+           funcionarios.nome_completo, funcionarios.idade, funcionarios.genero,
+           funcionarios.crvet, funcionarios.especialidade,
            consultas.data_consulta, consultas.hora_consulta
     FROM consultas
     JOIN pets ON consultas.pet_id = pets.id
@@ -222,6 +239,7 @@ def buscar_consultas():
     resultados = cursor.fetchall()
     conn.close()
     return resultados
+
 
 # ---------- Atualizações ----------
 def atualizar_senha_temporaria(email, nova_senha_hash):
