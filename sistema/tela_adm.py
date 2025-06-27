@@ -340,6 +340,10 @@ class TelaInicioAdm(QMainWindow):
                 return
 
             senha_temp = gerar_senha_aleatoria()
+            senha_temp = gerar_senha_aleatoria()
+            print(f"Senha temporária gerada para {email}: {senha_temp}")  # DEBUG
+            senha_hash = hashlib.sha256(senha_temp.encode()).hexdigest()
+
             senha_hash = hashlib.sha256(senha_temp.encode()).hexdigest()
 
             try:

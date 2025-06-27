@@ -8,7 +8,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 
-load_dotenv()  # carrega as variáveis do arquivo .env
+load_dotenv() 
 
 EMAIL_REMETENTE = os.getenv('EMAIL_REMETENTE')
 SENHA_REMETENTE = os.getenv('SENHA_REMETENTE')

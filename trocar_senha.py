@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QDialog, QMessageBox
+from PyQt6.QtWidgets import QDialog, QMessageBox, QLineEdit  
 from PyQt6 import uic
 import hashlib
 from data import atualizar_senha_temporaria
@@ -7,6 +7,8 @@ class DialogTrocaSenha(QDialog):
     def __init__(self, email):
         super().__init__()
         uic.loadUi("telas/dialog/troca_senha.ui", self)
+
+        self.lineEditNovaSenha.setEchoMode(QLineEdit.EchoMode.Password) 
         self.email = email
         self.setWindowTitle("Nova Senha Obrigatória")
 

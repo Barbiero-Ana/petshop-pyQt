@@ -1,9 +1,43 @@
-from PyQt6.QtWidgets import QMainWindow, QLabel, QPushButton
+from PyQt6.QtWidgets import QMainWindow, QLabel, QPushButton, QDialog, QVBoxLayout, QListWidget
 from PyQt6 import uic
-from data import buscar_pets_usuario, criar_tabela_pets, buscar_nome_usuario
+from data import (
+    buscar_pets_usuario, criar_tabela_pets, buscar_nome_usuario, buscar_todos_funcionarios
+)
 from sistema.cadastro_pet import DialogAddPet
 from sistema.listar_pets import DialogListaPets, DialogInfoPet 
 from sistema.eventos_agenda import TelaEventosAgenda
+from PyQt6.QtWidgets import QGridLayout
+from sistema.localizacao import DialogLocalizacao
+
+class DialogListaProfissionais(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Profissionais Cadastrados")
+        self.resize(400, 300)
+
+        layout = QVBoxLayout(self)
+        self.lista_funcionarios = QListWidget()
+        layout.addWidget(self.lista_funcionarios)
+
+        btnFechar = QPushButton("Fechar")
+        btnFechar.clicked.connect(self.close)
+        layout.addWidget(btnFechar)
+
+        self.carregar_profissionais()
+
+    def carregar_profissionais(self):
+        profissionais = buscar_todos_funcionarios()
+        self.lista_funcionarios.clear()
+
+        if not profissionais:
+            self.lista_funcionarios.addItem("Nenhum profissional cadastrado.")
+            return
+
+        for func in profissionais:
+            
+            id_, nome_completo, idade, genero, email, telefone, especialidade, is_veterinario, crvet = func
+            tipo = "Veterinário" if is_veterinario else "Funcionário"
+            self.lista_funcionarios.addItem(f"{nome_completo} ({tipo}) - {especialidade} - {email}")
 
 class TelaInicio(QMainWindow):
     def __init__(self, email_usuario):
@@ -17,20 +51,27 @@ class TelaInicio(QMainWindow):
         primeiro_nome = nome_completo.split()[0] if nome_completo else "Usuário"
         self.welcomeLabel.setText(f"Seja bem-vindo(a), {primeiro_nome}!")
 
-        # Botões
         self.addpets.clicked.connect(self.abrir_dialog_add_pet)
+        self.localizacaobutton.clicked.connect(self.abrir_localizacao)
         self.pushButton_4.clicked.connect(self.fechar_sessao)
         self.pushButton.clicked.connect(self.abrir_dialog_lista_pets)
-        self.pushbutton.clicked.connect(self.abrir_consultas)
+        self.eventosbutton.clicked.connect(self.abrir_agenda)
+        self.profissionalbutton.clicked.connect(self.abrir_dialog_profissionais)
 
-        self.pets_layout = self.findChild(type(self.gridLayout), 'gridLayout')
-
+        self.pets_layout = self.findChild(QGridLayout, 'gridLayout')
         self.carregar_pets()
 
-    def abrir_consultas(self):
-        # Abrir a janela de agenda/eventos
+    def abrir_localizacao(self):
+        dialog = DialogLocalizacao(self)
+        dialog.exec()
+
+    def abrir_agenda(self):
         self.tela_agenda = TelaEventosAgenda(self)
         self.tela_agenda.show()
+
+    def abrir_dialog_profissionais(self):
+        dialog = DialogListaProfissionais(self)
+        dialog.exec()
 
     def carregar_pets(self):
         layout = self.pets_layout
