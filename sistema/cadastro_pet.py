@@ -21,7 +21,6 @@ class DialogAddPet(QDialog):
         self.confirmarButton.clicked.connect(self.confirmar)
         self.cancelarButton.clicked.connect(self.reject)
 
-        # Configuração da ComboBox de raças com QListView e scroll estilizado
         self.racaPetInput.setView(QListView())
         self.racaPetInput.view().setStyleSheet("""
             QScrollBar:vertical {
@@ -37,11 +36,9 @@ class DialogAddPet(QDialog):
             }
         """)
 
-        # Permitir drag & drop na label de foto
         self.fotoPreview.setAcceptDrops(True)
         self.fotoPreview.installEventFilter(self)
 
-        # Atualizar raças ao mudar espécie
         self.especiePetInput.currentIndexChanged.connect(self.atualizar_racas)
         self.atualizar_racas()
 

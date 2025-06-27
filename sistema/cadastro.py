@@ -9,9 +9,8 @@ class TelaCadastro(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi('telas/pagina_cadastro_petshop.ui', self)
-        criar_tabela_usuarios()  # Cria tabela se não existir
+        criar_tabela_usuarios()  
 
-        # Substitui o QLabel original 'loginlabel' por ClickableLabel com as mesmas propriedades
         label_antigo = self.findChild(QLabel, "loginlabel")
         if label_antigo:
             self.loginlabel = ClickableLabel(label_antigo.parent())
@@ -27,7 +26,7 @@ class TelaCadastro(QMainWindow):
 
         self.cadastrobotao.clicked.connect(self.realizar_cadastro)
         self.telefone.textChanged.connect(self.formatar_telefone)
-        self._ignore_telefone_change = False  # Flag para evitar loop na alteração de texto
+        self._ignore_telefone_change = False  
 
     def realizar_cadastro(self):
         senha = self.senhacadastro.text()

@@ -31,7 +31,7 @@ class DialogCadastroPet(QDialog):
         self.fotoPreview.setAcceptDrops(True)
         self.fotoPreview.installEventFilter(self)
 
-        self.listWidgetUsuarios.hide()  # ⛔️ Oculta lista inicialmente
+        self.listWidgetUsuarios.hide()  
         self.toggle_dono_input()
 
     def toggle_dono_input(self):
@@ -41,7 +41,7 @@ class DialogCadastroPet(QDialog):
         if not ativo:
             self.lineEditDono.clear()
             self.listWidgetUsuarios.clear()
-            self.listWidgetUsuarios.hide()  # Oculta ao marcar 'sem dono'
+            self.listWidgetUsuarios.hide()  
 
     def atualizar_lista_usuarios(self):
         termo = self.lineEditDono.text().strip()
@@ -54,7 +54,7 @@ class DialogCadastroPet(QDialog):
                     item = QListWidgetItem(f"{nome} <{email}>")
                     item.setData(Qt.ItemDataRole.UserRole, email)
                     self.listWidgetUsuarios.addItem(item)
-                self.listWidgetUsuarios.show()  # Mostra se houver sugestões
+                self.listWidgetUsuarios.show()  
             else:
                 self.listWidgetUsuarios.hide()
         else:

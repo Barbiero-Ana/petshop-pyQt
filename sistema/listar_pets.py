@@ -38,10 +38,9 @@ class DialogInfoPet(QDialog):
 class DialogListaPets(QDialog):
     def __init__(self, email_usuario):
         super().__init__()
-        uic.loadUi('telas/dialog/list_pets.ui', self)  # Ajuste o caminho se necessário
+        uic.loadUi('telas/dialog/list_pets.ui', self)  
 
         self.email_usuario = email_usuario
-        # Usa o nome correto do QListWidget conforme o .ui
         self.listaPets.itemClicked.connect(self.exibir_info_pet)
 
         self.carregar_pets()

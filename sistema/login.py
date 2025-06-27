@@ -5,8 +5,8 @@ from carregamento import TelaCarregamento
 from sistema.tela_inicio import TelaInicio
 from sistema.tela_adm import TelaInicioAdm
 from sistema.cadastro import TelaCadastro
-from trocar_senha import DialogTrocaSenha  # Importado para troca de senha
-from data import verificar_usuario  # Para checar senha temporária
+from trocar_senha import DialogTrocaSenha  
+from data import verificar_usuario  
 
 
 class TelaLogin(QMainWindow):
@@ -31,7 +31,7 @@ class TelaLogin(QMainWindow):
 
         if sucesso:
             resultado = verificar_usuario(email)
-            if resultado and resultado[1]:  # senha_temporaria == 1
+            if resultado and resultado[1]:  
                 dialog = DialogTrocaSenha(email)
                 if dialog.exec() != QDialog.DialogCode.Accepted:
                     QMessageBox.warning(self, "Atenção", "Você deve trocar a senha para continuar.")
@@ -39,7 +39,7 @@ class TelaLogin(QMainWindow):
 
             QMessageBox.information(self, "Sucesso", msg)
             if is_admin:
-                self.tela_inicio_adm = TelaInicioAdm(email, login_window=self)  # Passa self para voltar
+                self.tela_inicio_adm = TelaInicioAdm(email, login_window=self)  
                 self.tela_inicio_adm.show()
             else:
                 self.tela_inicio = TelaInicio(email)
