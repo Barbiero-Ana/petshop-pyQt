@@ -47,7 +47,7 @@ Obrigado!
 
 
 def enviar_email_confirmacao_consulta(destinatario, nome_pet, data, hora, nome_vet):
-    assunto = "📅 Confirmação de Consulta - Petshop"
+    assunto = "Confirmação de Consulta - CyberPet"
 
     corpo_html = f"""
     <html>
@@ -81,7 +81,7 @@ def enviar_email_confirmacao_consulta(destinatario, nome_pet, data, hora, nome_v
 
             <div style="text-align: center;">
                 <p style="font-size: 12px; color: #777;">Atenciosamente,<br>Equipe Cyberpet</p>
-                <img src="https://i.imgur.com/zn7YvYw.png" alt="Logo Petshop" width="100" style="margin-top: 10px;"/>
+                <img src="https://res.cloudinary.com/diwzoykov/image/upload/v1751022252/Logo_simples_circular_esmaltaria_preto_1_nqjcjh.png" alt="Logo Petshop" width="100" style="margin-top: 10px;"/>
             </div>
         </div>
     </body>

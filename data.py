@@ -201,6 +201,49 @@ def buscar_pets_com_dono(termo_busca=""):
     conn.close()
     return resultado
 
+# Funções para funcionários adicionadas:
+def buscar_todos_funcionarios():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute('''
+        SELECT id, nome_completo, idade, genero, email, telefone, especialidade, is_veterinario, crvet
+        FROM funcionarios
+        ORDER BY nome_completo
+    ''')
+    funcionarios = cursor.fetchall()
+    conn.close()
+    return funcionarios
+
+def atualizar_funcionario(id_, nome_completo, idade, genero, email, telefone, especialidade, is_veterinario, crvet):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute('''
+        UPDATE funcionarios SET
+            nome_completo = ?,
+            idade = ?,
+            genero = ?,
+            email = ?,
+            telefone = ?,
+            especialidade = ?,
+            is_veterinario = ?,
+            crvet = ?
+        WHERE id = ?
+    ''', (
+        nome_completo, idade, genero, email, telefone, especialidade,
+        1 if is_veterinario else 0,
+        crvet if is_veterinario else None,
+        id_
+    ))
+    conn.commit()
+    conn.close()
+
+def excluir_funcionario_por_id(id_):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM funcionarios WHERE id = ?", (id_,))
+    conn.commit()
+    conn.close()
+
 def buscar_funcionarios_veterinarios(completo=False):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -219,7 +262,6 @@ def buscar_funcionarios_veterinarios(completo=False):
     resultados = cursor.fetchall()
     conn.close()
     return resultados
-
 
 def buscar_consultas():
     conn = sqlite3.connect(DB_PATH)
