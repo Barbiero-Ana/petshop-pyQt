@@ -3,6 +3,7 @@ from PyQt6 import uic
 from PyQt6.QtCore import QStringListModel
 from data import buscar_consultas, excluir_consulta_por_id
 from sistema.agendamentos_dial import DialogAgendarConsulta
+from PyQt6.QtCore import QDate 
 
 class TelaEventosAgenda(QMainWindow):
     def __init__(self, parent=None):
@@ -30,9 +31,11 @@ class TelaEventosAgenda(QMainWindow):
         QMessageBox.information(self, "Evento Adicionado", f"{texto}")
 
     def abrir_dialog_consulta(self):
-        dialog = DialogAgendarConsulta()
+        data = self.calendarWidget.selectedDate()  
+        dialog = DialogAgendarConsulta(data)       
         if dialog.exec() == QDialog.DialogCode.Accepted:
             self.atualizar_eventos()
+
 
     def excluir_evento(self):
         index = self.listView.currentIndex().row()

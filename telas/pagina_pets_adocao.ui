@@ -192,59 +192,25 @@
      </item>
     </layout>
    </widget>
-   <widget class="QLabel" name="welcomeLabel">
-    <property name="geometry">
-     <rect>
-      <x>200</x>
-      <y>20</y>
-      <width>371</width>
-      <height>101</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>31</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Seja bem vindo(a) {nome}</string>
-    </property>
-    <property name="wordWrap">
-     <bool>true</bool>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
       <x>190</x>
-      <y>130</y>
-      <width>161</width>
-      <height>16</height>
+      <y>100</y>
+      <width>251</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>19</pointsize>
+      <pointsize>28</pointsize>
      </font>
     </property>
     <property name="text">
-     <string>Pets cadastrados</string>
+     <string>Pets para adoção</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="addpets">
-    <property name="geometry">
-     <rect>
-      <x>350</x>
-      <y>120</y>
-      <width>113</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Adicionar pets</string>
     </property>
    </widget>
    <widget class="QWidget" name="gridLayoutWidget">
@@ -253,42 +219,10 @@
       <x>190</x>
       <y>160</y>
       <width>561</width>
-      <height>131</height>
+      <height>361</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout"/>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>200</x>
-      <y>300</y>
-      <width>541</width>
-      <height>221</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>../../../../Downloads/CyberPet (1).png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>460</x>
-      <y>120</y>
-      <width>113</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Ver pets</string>
-    </property>
    </widget>
    <widget class="QLabel" name="label_3">
     <property name="geometry">
